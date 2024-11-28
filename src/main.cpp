@@ -34,7 +34,7 @@ int init() {
     return 0;
 }
 
-void destroy() {
+void quit() {
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
     renderer = NULL;
@@ -60,7 +60,7 @@ bool loop() {
     optionsButton.SetSize(100,100);
     optionsButton.SetPoint(screenCenter.x, screenCenter.y);
 
-    Button exitButton("Exit", sayHello);
+    Button exitButton("Exit");
     exitButton.SetForegroundColor(255,255,255);
     exitButton.SetSize(100,100);
     exitButton.SetPoint(screenCenter.x, screenCenter.y + 120);
@@ -78,12 +78,22 @@ bool loop() {
               //startButton.Click();
               optionsButton.Click();
             }
+            if (exitButton.InBounds(e.button.x, e.button.y)) {
+              return false;
+            }
         }
     }
 
-    startButton.Render(renderer);
-    optionsButton.Render(renderer);
-    exitButton.Render(renderer);
+    if (startButton.RenderButton(renderer) != 0 || startButton.Render(renderer) != 0) {
+      return false;
+    };
+    if (optionsButton.Render(renderer) != 0) {
+      return false;
+    };
+    if (exitButton.Render(renderer) != 0) {
+      return false;
+    };
+
     SDL_RenderPresent(renderer);
     return true;
 }
@@ -97,6 +107,6 @@ int main() {
     while (loop()) {
         SDL_Delay(1000/60);
     };
-    destroy();
+    quit();
     return 0;
 }

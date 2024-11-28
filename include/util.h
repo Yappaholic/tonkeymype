@@ -5,4 +5,5 @@ struct Point {
   int y;
 };
 Point getScreenCenter(int width, int height);
+int pointToPixel(int points);
 #endif
