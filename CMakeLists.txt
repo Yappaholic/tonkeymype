@@ -5,7 +5,9 @@ set (CMAKE_CXX_STANDARD 17)
 set (CMAKE_CXX_STANDARD_REQUIRED True)
 set (CMAKE_EXPORT_COMPILE_COMMANDS True)
 set (HEADER_FILES ${CMAKE_SOURCE_DIR}/include)
-set (SOURCES ${CMAKE_SOURCE_DIR}/src/main.cpp ${CMAKE_SOURCE_DIR}/src/button.cpp)
+set (SOURCES ${CMAKE_SOURCE_DIR}/src/main.cpp    
+             ${CMAKE_SOURCE_DIR}/src/button.cpp 
+             ${CMAKE_SOURCE_DIR}/src/util.cpp   )
 
 find_package(SDL2 REQUIRED CONFIG REQUIRED COMPONENTS SDL2)
 find_package(SDL2_ttf REQUIRED)

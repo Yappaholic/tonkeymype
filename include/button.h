@@ -4,6 +4,7 @@
 #include <SDL.h>
 #include <array>
 #include <functional>
+#include "../include/util.h"
 
 class Button {
   private:
@@ -20,12 +21,15 @@ class Button {
     ~Button();
     void operator=(Button& button);
     void Click();
+    bool InBounds(int x, int y);
     void ChangeText(std::string newText);
     void ChangeEvent(std::function<void()> newFun);
     void SetBackgroundColor(int red, int green, int blue, int alpha);
     void SetBackgroundColor(int red, int green, int blue);
     void SetForegroundColor(int red, int green, int blue);
-    void SetDimensions(int width, int height);
+    void SetSize(int width, int height);
+    Point GetSize();
+    void SetPoint(int x, int y);
     void Render(SDL_Renderer* renderer);
 };
 #endif
