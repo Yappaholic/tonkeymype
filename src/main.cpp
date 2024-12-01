@@ -3,110 +3,44 @@
 #include "../include/button.h"
 #include "../include/util.h"
 #include <SDL_ttf.h>
+#include "../include/app.h"
 
 using namespace std;
-int FPS = 60;
 SDL_Window *window;
 SDL_Renderer* renderer;
-int SCREEN_WIDTH = 640;
-int SCREEN_HEIGHT = 480;
-
-int error() {
-    cout << "Error initializing" << SDL_GetError() << endl;
-    system("pause");
-    return 1;
-}
-
-int init() {
-    if (SDL_Init(SDL_INIT_EVERYTHING) < 0) {
-        return error();
-    }
-
-    if (TTF_Init() < 0) {
-      cout << "Error initializing text library" << TTF_GetError() << endl;
-      return 1;
-    }
-
-    int result = SDL_CreateWindowAndRenderer(SCREEN_WIDTH, SCREEN_HEIGHT, NULL, &window, &renderer);
-    if (result != 0) {
-        return error();
-    }
-    return 0;
-}
-
-void quit() {
-    SDL_DestroyRenderer(renderer);
-    SDL_DestroyWindow(window);
-    renderer = NULL;
-    window = NULL;
-    TTF_Quit();
-    SDL_Quit();
-}
+extern MainSettings settings;
+Point screenCenter = getScreenCenter(settings.SCREEN_WIDTH, settings.SCREEN_HEIGHT);
 
 void sayHello() {
   SDL_Log("Hello, world!");
 }
 
-bool loop() {
-    SDL_Event e;
-    Point screenCenter = getScreenCenter(SCREEN_WIDTH, SCREEN_HEIGHT);
-    Button startButton("Start", sayHello);
-    startButton.SetForegroundColor(255,255,255);
-    startButton.SetSize(100, 100);
-    startButton.SetPoint(screenCenter.x, screenCenter.y - 120);
-
-    Button optionsButton("Options", sayHello);
-    optionsButton.SetForegroundColor(255,255,255);
-    optionsButton.SetSize(100,100);
-    optionsButton.SetPoint(screenCenter.x, screenCenter.y);
-
-    Button exitButton("Exit");
-    exitButton.SetForegroundColor(255,255,255);
-    exitButton.SetSize(100,100);
-    exitButton.SetPoint(screenCenter.x, screenCenter.y + 120);
-
-
-    //SDL_SetRenderDrawColor(renderer, 255, 255, 255, 120);
-    //SDL_RenderClear(renderer);
-
-    while (SDL_PollEvent(&e) != 0) {
-      switch (e.type) {
-        case SDL_QUIT:
-            return false;
-        case SDL_MOUSEBUTTONDOWN:
-            if (optionsButton.InBounds(e.button.x, e.button.y)) {
-              //startButton.Click();
-              optionsButton.Click();
-            }
-            if (exitButton.InBounds(e.button.x, e.button.y)) {
-              return false;
-            }
-        }
-    }
-
-    if (startButton.RenderButton(renderer) != 0 || startButton.Render(renderer) != 0) {
-      return false;
-    };
-    if (optionsButton.Render(renderer) != 0) {
-      return false;
-    };
-    if (exitButton.Render(renderer) != 0) {
-      return false;
-    };
-
-    SDL_RenderPresent(renderer);
-    return true;
+void game_loop() {
+  SDL_SetRenderDrawColor(renderer,255,255,255,255);
+  Button newButton("New", sayHello);
+  newButton.SetForegroundColor(255,255,255);
+  newButton.SetSize(100,100);
+  newButton.SetPoint(320, 240);
+  while(true) {
+    newButton.Render(renderer);
+  }
 }
 
+
 int main() {
-  if (init() != 0) {
+  App app;
+  if (app.Init() != 0) {
       return 1;
   }
+  app.MainMenu();
 
 
-    while (loop()) {
-        SDL_Delay(1000/60);
-    };
-    quit();
-    return 0;
+  while (app.Running() == true) {
+    app.HandleEvents();
+    app.Draw();
+
+    SDL_Delay(1000/settings.FPS);
+  };
+  app.Quit();
+  return 0;
 }

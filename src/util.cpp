@@ -4,6 +4,18 @@ struct Point {
   int y;
 };
 
+struct MainSettings {
+  int FPS;
+  int SCREEN_WIDTH;
+  int SCREEN_HEIGHT;
+};
+
+MainSettings settings {
+  60,
+  480,
+  640
+};
+
 struct DPI {
   float diagonal;
   float horizontal;
@@ -23,7 +35,7 @@ DPI getScreenDPI() {
   if (SDL_GetDisplayDPI(0, &ddpi, &hdpi, &vdpi) == 0) {
     dpi = {ddpi, hdpi, vdpi};
   } else {
-    dpi = {NULL, NULL, NULL};
+    dpi = {0.0, 0.0, 0.0};
   }
   return dpi;
 }
